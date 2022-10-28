@@ -20,7 +20,7 @@ public class UI {
 			System.out.print("-");
 		}
 		else {
-			System.out.println(peca);
+			System.out.print(peca);
 		}
 		System.out.print(" ");
 	}
