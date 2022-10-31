@@ -16,6 +16,7 @@ public class Program {
 		ChessMatch chessMatch = new ChessMatch();
 		
 		while(true) {
+			UI.clearScreen();
 			UI.printBoard(chessMatch.getPecas());
 			System.out.println();
 			System.out.print("Origem: ");
