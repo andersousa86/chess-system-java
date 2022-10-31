@@ -3,7 +3,7 @@ package chess;
 import boardgame.Peca;
 import boardgame.Tabuleiro;
 
-public class PecaChess extends Peca{
+public abstract class PecaChess extends Peca{
 	
 	private Cor cor;
 
