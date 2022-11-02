@@ -33,7 +33,7 @@ public class Torre extends PecaChess {
 		}
 
 		// Left-Esquerda
-		p.setValues(posicao.getFileira() - 1, posicao.getColuna() - 1);
+		p.setValues(posicao.getFileira(), posicao.getColuna() - 1);
 		while (getTabuleiro().posicaoExiste(p) && !getTabuleiro().haUmaPeca(p)) {
 			mat[p.getFileira()][p.getColuna()] = true;
 			p.setColuna(p.getColuna() - 1);
@@ -43,7 +43,7 @@ public class Torre extends PecaChess {
 		}
 
 		// Right-Direita
-		p.setValues(posicao.getFileira() - 1, posicao.getColuna() + 1);
+		p.setValues(posicao.getFileira(), posicao.getColuna() + 1);
 		while (getTabuleiro().posicaoExiste(p) && !getTabuleiro().haUmaPeca(p)) {
 			mat[p.getFileira()][p.getColuna()] = true;
 			p.setColuna(p.getColuna() + 1);
