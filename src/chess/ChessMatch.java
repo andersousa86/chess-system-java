@@ -1,6 +1,8 @@
 package chess;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 
 import boardgame.Peca;
 import boardgame.Posicao;
@@ -13,6 +15,9 @@ public class ChessMatch {
 	private int turn;
 	private Cor currentPlayer;
 	private Tabuleiro tabuleiro;
+	
+	private List<Peca> pecasNoTabuleiro = new ArrayList<>();
+	private List<Peca> capturadasPecas = new ArrayList<>();
 
 	public ChessMatch() {
 		tabuleiro = new Tabuleiro(8, 8);
@@ -59,6 +64,10 @@ public class ChessMatch {
 		Peca p = tabuleiro.removaPeca(source);
 		Peca capturarPeca = tabuleiro.removaPeca(target);
 		tabuleiro.coloarPeca(p, target);
+		if (capturarPeca != null) {
+			pecasNoTabuleiro.remove(capturarPeca);
+			capturadasPecas.add(capturarPeca);
+		}
 		return capturarPeca;
 	}
 	
@@ -87,6 +96,7 @@ public class ChessMatch {
 
 	private void colocarNovaPeca(char coluna, int linha, PecaChess peca) {
 		tabuleiro.coloarPeca(peca, new ChessPosicao(coluna, linha).toPosicao());
+		pecasNoTabuleiro.add(peca);
 	}
 
 	private void iniciarSetup() {

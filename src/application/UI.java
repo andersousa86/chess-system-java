@@ -1,8 +1,10 @@
 package application;
 
-import java.awt.Color;
+import java.util.Arrays;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import chess.ChessMatch;
 import chess.ChessPosicao;
@@ -31,26 +33,27 @@ public class UI {
 	public static final String ANSI_PURPLE_BACKGROUND = "\u001B[45m";
 	public static final String ANSI_CYAN_BACKGROUND = "\u001B[46m";
 	public static final String ANSI_WHITE_BACKGROUND = "\u001B[47m";
-	
+
 	public static void clearScreen() {
 		System.out.print("\033[H\033[2J");
 		System.out.flush();
 	}
-	
+
 	public static ChessPosicao lerChessPosicao(Scanner sc) {
 		try {
-				String s = sc.nextLine();
-				char coluna = s.charAt(0);
-				int linha = Integer.parseInt(s.substring(1));
-				return new ChessPosicao(coluna, linha);
-		}
-		catch (RuntimeException e) {
-				throw new InputMismatchException("Erro ao ler posição do xadrez. É válido de a1 ao a8");
+			String s = sc.nextLine();
+			char coluna = s.charAt(0);
+			int linha = Integer.parseInt(s.substring(1));
+			return new ChessPosicao(coluna, linha);
+		} catch (RuntimeException e) {
+			throw new InputMismatchException("Erro ao ler posição do xadrez. É válido de a1 ao a8");
 		}
 	}
-	
-	public static void printMatch(ChessMatch chessMatch) {
+
+	public static void printMatch(ChessMatch chessMatch, List<PecaChess> capturadas) {
 		printBoard(chessMatch.getPecas());
+		System.out.println();
+		printCapturadaPecas(capturadas);
 		System.out.println();
 		System.out.println("Turno: " + chessMatch.getTurn());
 		System.out.println("Esperando jogador: " + chessMatch.getCurrentPlayer());
@@ -66,7 +69,7 @@ public class UI {
 		}
 		System.out.println("  A B C D E F G H");
 	}
-	
+
 	public static void printBoard(PecaChess[][] pecas, boolean[][] possibleMoves) {
 		for (int i = 0; i < pecas.length; i++) {
 			System.out.print(8 - i + " ");
@@ -92,6 +95,19 @@ public class UI {
 			}
 		}
 		System.out.print(" ");
+	}
+
+	private static void printCapturadaPecas(List<PecaChess> capturada) {
+		List<PecaChess> branca = capturada.stream().filter(x -> x.getCor() == Cor.BRANCA).collect(Collectors.toList());
+		List<PecaChess> preta = capturada.stream().filter(x -> x.getCor() == Cor.PRETA).collect(Collectors.toList());
+		System.out.print("Pecas capturadas.");
+		System.out.print("Brancas: ");
+		System.out.println(ANSI_WHITE);
+		System.out.println(Arrays.toString(branca.toArray()));
+		System.out.print("Pretas: ");
+		System.out.println(ANSI_YELLOW);
+		System.out.println(Arrays.toString(preta.toArray()));
+		System.out.println(ANSI_RESET);
 	}
 
 }
