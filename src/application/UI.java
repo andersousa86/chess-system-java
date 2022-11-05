@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import chess.ChessMatch;
 import chess.ChessPosicao;
 import chess.Cor;
 import chess.PecaChess;
@@ -46,6 +47,13 @@ public class UI {
 		catch (RuntimeException e) {
 				throw new InputMismatchException("Erro ao ler posição do xadrez. É válido de a1 ao a8");
 		}
+	}
+	
+	public static void printMatch(ChessMatch chessMatch) {
+		printBoard(chessMatch.getPecas());
+		System.out.println();
+		System.out.println("Turno: " + chessMatch.getTurn());
+		System.out.println("Esperando jogador: " + chessMatch.getCurrentPlayer());
 	}
 
 	public static void printBoard(PecaChess[][] pecas) {

@@ -1,5 +1,7 @@
 package chess;
 
+import java.awt.Color;
+
 import boardgame.Peca;
 import boardgame.Posicao;
 import boardgame.Tabuleiro;
@@ -8,11 +10,23 @@ import chess.pecas.Torre;
 
 public class ChessMatch {
 
+	private int turn;
+	private Cor currentPlayer;
 	private Tabuleiro tabuleiro;
 
 	public ChessMatch() {
 		tabuleiro = new Tabuleiro(8, 8);
+		turn = 1;
+		currentPlayer = Cor.BRANCA;
 		iniciarSetup();
+	}
+	
+	public int getTurn() {
+		return turn;
+	}
+	
+	public Cor getCurrentPlayer() {
+		return currentPlayer;
 	}
 
 	public PecaChess[][] getPecas() {
@@ -37,6 +51,7 @@ public class ChessMatch {
 		validarSourcePosicao(source);
 		validateTargetPosition(source, target);
 		Peca capturarPeca = makeMove(source, target);
+		nexTurn();
 		return (PecaChess) capturarPeca;
 	}
 	
@@ -49,10 +64,13 @@ public class ChessMatch {
 	
 	private void validarSourcePosicao(Posicao posicao) {
 		if (!tabuleiro.haUmaPeca(posicao)) {
-			throw new ChessExcecao("Não existe peça na posição de origem!");
+			throw new ChessExcecao("Nao existe peca na posicao de origem!");
+		}
+		if (currentPlayer != ((PecaChess) tabuleiro.peca(posicao)).getCor()) {
+			throw new ChessExcecao("A peca escolhida nao e a sua!");
 		}
 		if (!tabuleiro.peca(posicao).isThereAnyPossibleMove()) {
-			throw new ChessExcecao("Não existe movimentacao da peça na posição de origem!");
+			throw new ChessExcecao("Nao existe movimentacao da peca na posicao de origem!");
 		}
 	}
 	
@@ -60,6 +78,11 @@ public class ChessMatch {
 		if (!tabuleiro.peca(source).possibleMoves(target)) {
 			throw new ChessExcecao("Não é possível mover a peça para essa posição!");
 		}
+	}
+	
+	private void nexTurn() {
+		turn++;
+		currentPlayer = (currentPlayer == Cor.BRANCA) ? Cor.PRETA : Cor.BRANCA;
 	}
 
 	private void colocarNovaPeca(char coluna, int linha, PecaChess peca) {
