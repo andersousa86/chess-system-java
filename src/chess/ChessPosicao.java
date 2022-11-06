@@ -9,7 +9,7 @@ public class ChessPosicao {
 	
 	public ChessPosicao(char coluna, int linha) {
 		if (coluna<'a' || coluna>'h' || linha<1 || linha>8) {
-			throw new ChessExcecao("Erro ao instanciar a posição da peça: valores válidos de a1 até h8!");
+			throw new ChessExcecao("Erro ao instanciar a posicao da peca: valores validos de a1 ate h8!");
 		}
 		this.coluna = coluna;
 		this.linha = linha;
@@ -28,7 +28,7 @@ public class ChessPosicao {
 	}
 	
 	protected static ChessPosicao fromPosicao(Posicao posicao) {
-		return new ChessPosicao((char)('a'-posicao.getColuna()), 8-posicao.getFileira());
+		return new ChessPosicao((char)('a'+posicao.getColuna()), 8-posicao.getFileira());
 	}
 
 	@Override
