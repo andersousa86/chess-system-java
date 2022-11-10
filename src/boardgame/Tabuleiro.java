@@ -39,7 +39,7 @@ public class Tabuleiro {
 	
 	public void coloarPeca(Peca peca, Posicao posicao) {
 		if (haUmaPeca(posicao)) {
-			throw new TabuleiroExcecoes("Já existe uma peça na posição: " + posicao);
+			throw new TabuleiroExcecoes("Ja existe uma peca na posicao: " + posicao);
 		}
 		pecas[posicao.getFileira()][posicao.getColuna()] = peca;
 		peca.posicao = posicao;
