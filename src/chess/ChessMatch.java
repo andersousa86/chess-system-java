@@ -1,16 +1,14 @@
 package chess;
 
-import java.awt.Color;
-import java.rmi.server.RemoteStub;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import boardgame.Peca;
 import boardgame.Posicao;
 import boardgame.Tabuleiro;
 import chess.pecas.Bispo;
+import chess.pecas.Cavalo;
 import chess.pecas.Peao;
 import chess.pecas.Rei;
 import chess.pecas.Torre;
@@ -195,6 +193,8 @@ public class ChessMatch {
 		colocarNovaPeca('c', 1, new Bispo(tabuleiro, Cor.BRANCA));
 		colocarNovaPeca('f', 1, new Bispo(tabuleiro, Cor.BRANCA));
 		colocarNovaPeca('e', 1, new Rei(tabuleiro, Cor.BRANCA, this));
+		colocarNovaPeca('b', 1, new Cavalo(tabuleiro, Cor.BRANCA));
+		colocarNovaPeca('g', 1, new Cavalo(tabuleiro, Cor.BRANCA));
 		colocarNovaPeca('a', 2, new Peao(tabuleiro, Cor.BRANCA));
 		colocarNovaPeca('b', 2, new Peao(tabuleiro, Cor.BRANCA));
 		colocarNovaPeca('c', 2, new Peao(tabuleiro, Cor.BRANCA));
@@ -209,6 +209,8 @@ public class ChessMatch {
 		colocarNovaPeca('c', 8, new Bispo(tabuleiro, Cor.PRETA));
 		colocarNovaPeca('f', 8, new Bispo(tabuleiro, Cor.PRETA));
 		colocarNovaPeca('e', 8, new Rei(tabuleiro, Cor.PRETA, this));
+		colocarNovaPeca('b', 8, new Cavalo(tabuleiro, Cor.PRETA));
+		colocarNovaPeca('g', 8, new Cavalo(tabuleiro, Cor.PRETA));
 		colocarNovaPeca('a', 7, new Peao(tabuleiro, Cor.PRETA));
 		colocarNovaPeca('b', 7, new Peao(tabuleiro, Cor.PRETA));
 		colocarNovaPeca('c', 7, new Peao(tabuleiro, Cor.PRETA));
