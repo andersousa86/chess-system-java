@@ -10,6 +10,7 @@ import boardgame.Tabuleiro;
 import chess.pecas.Bispo;
 import chess.pecas.Cavalo;
 import chess.pecas.Peao;
+import chess.pecas.Rainha;
 import chess.pecas.Rei;
 import chess.pecas.Torre;
 
@@ -195,6 +196,7 @@ public class ChessMatch {
 		colocarNovaPeca('e', 1, new Rei(tabuleiro, Cor.BRANCA, this));
 		colocarNovaPeca('b', 1, new Cavalo(tabuleiro, Cor.BRANCA));
 		colocarNovaPeca('g', 1, new Cavalo(tabuleiro, Cor.BRANCA));
+		colocarNovaPeca('d', 1, new Rainha(tabuleiro, Cor.BRANCA));
 		colocarNovaPeca('a', 2, new Peao(tabuleiro, Cor.BRANCA));
 		colocarNovaPeca('b', 2, new Peao(tabuleiro, Cor.BRANCA));
 		colocarNovaPeca('c', 2, new Peao(tabuleiro, Cor.BRANCA));
@@ -211,6 +213,7 @@ public class ChessMatch {
 		colocarNovaPeca('e', 8, new Rei(tabuleiro, Cor.PRETA, this));
 		colocarNovaPeca('b', 8, new Cavalo(tabuleiro, Cor.PRETA));
 		colocarNovaPeca('g', 8, new Cavalo(tabuleiro, Cor.PRETA));
+		colocarNovaPeca('d', 8, new Rainha(tabuleiro, Cor.PRETA));
 		colocarNovaPeca('a', 7, new Peao(tabuleiro, Cor.PRETA));
 		colocarNovaPeca('b', 7, new Peao(tabuleiro, Cor.PRETA));
 		colocarNovaPeca('c', 7, new Peao(tabuleiro, Cor.PRETA));
