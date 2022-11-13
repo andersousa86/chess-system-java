@@ -24,6 +24,11 @@ public class Rei extends PecaChess {
 		PecaChess p = (PecaChess)getTabuleiro().peca(posicao);
 		return p == null || p.getCor() != getCor();
 	}
+	
+	private boolean testTorreCastling(Posicao posicao) {
+		PecaChess p = (PecaChess)getTabuleiro().peca(posicao);
+		return p != null && p instanceof Torre && p.getCor() == getCor() && p.getMoveConta() == 0;
+	}
 
 	@Override
 	public boolean[][] possibleMoves() {
@@ -78,6 +83,30 @@ public class Rei extends PecaChess {
 		if (getTabuleiro().posicaoExiste(p) && canMove(p)) {
 			mat[p.getFileira()][p.getColuna()] = true;
 		}
+		
+		//Movimento Especial Roque
+		if (getMoveConta() == 0 && !chessMatch.getCheck()) {
+			//Roque pequeno, lado do rei
+			Posicao posT1 = new Posicao(posicao.getFileira(), posicao.getColuna() + 3);
+			if (testTorreCastling(posT1)) {
+				Posicao p1 = new Posicao(posicao.getFileira(), posicao.getColuna() + 1);
+				Posicao p2 = new Posicao(posicao.getFileira(), posicao.getColuna() + 2);
+				if (getTabuleiro().peca(p1) == null && getTabuleiro().peca(p2) == null) {
+					mat[posicao.getFileira()][posicao.getColuna() + 2] = true;
+				}
+			}
+			//Roque grande, lado da rainha
+			Posicao posT2 = new Posicao(posicao.getFileira(), posicao.getColuna() - 4);
+			if (testTorreCastling(posT2)) {
+				Posicao p1 = new Posicao(posicao.getFileira(), posicao.getColuna() - 1);
+				Posicao p2 = new Posicao(posicao.getFileira(), posicao.getColuna() - 2);
+				Posicao p3 = new Posicao(posicao.getFileira(), posicao.getColuna() - 3);
+				if (getTabuleiro().peca(p1) == null && getTabuleiro().peca(p2) == null && getTabuleiro().peca(p3) == null) {
+					mat[posicao.getFileira()][posicao.getColuna() - 2] = true;
+				}
+			}
+		}
+		
 
 		return mat;
 	}

@@ -21,7 +21,7 @@ public class ChessMatch {
 	private Tabuleiro tabuleiro;
 	private boolean check;
 	private boolean checkMate;
-	
+
 	private List<Peca> pecasNoTabuleiro = new ArrayList<>();
 	private List<Peca> capturadasPecas = new ArrayList<>();
 
@@ -31,19 +31,19 @@ public class ChessMatch {
 		currentPlayer = Cor.BRANCA;
 		iniciarSetup();
 	}
-	
+
 	public int getTurn() {
 		return turn;
 	}
-	
+
 	public Cor getCurrentPlayer() {
 		return currentPlayer;
 	}
-	
+
 	public boolean getCheck() {
 		return check;
 	}
-	
+
 	public boolean getCheckMate() {
 		return checkMate;
 	}
@@ -57,36 +57,35 @@ public class ChessMatch {
 		}
 		return mat;
 	}
-	
-	public boolean[][] possibleMoves(ChessPosicao sourcePosicao){
+
+	public boolean[][] possibleMoves(ChessPosicao sourcePosicao) {
 		Posicao posicao = sourcePosicao.toPosicao();
 		validarSourcePosicao(posicao);
 		return tabuleiro.peca(posicao).possibleMoves();
 	}
-	
+
 	public PecaChess performChessMove(ChessPosicao sourcePosicao, ChessPosicao targetPosicao) {
-		Posicao source = sourcePosicao .toPosicao();
+		Posicao source = sourcePosicao.toPosicao();
 		Posicao target = targetPosicao.toPosicao();
 		validarSourcePosicao(source);
 		validateTargetPosition(source, target);
 		Peca capturarPeca = makeMove(source, target);
-		
+
 		if (testCheck(currentPlayer)) {
 			desfazerMove(source, target, capturarPeca);
 			throw new ChessExcecao("Voce nao pode colcoar a peca em check!");
 		}
-		
+
 		check = (testCheck(oponente(currentPlayer))) ? true : false;
-		
+
 		if (testCheckMate(oponente(currentPlayer))) {
 			checkMate = true;
-		}	
-		else {
+		} else {
 			nexTurn();
 		}
 		return (PecaChess) capturarPeca;
 	}
-	
+
 	private Peca makeMove(Posicao source, Posicao target) {
 		PecaChess p = (PecaChess) tabuleiro.removaPeca(source);
 		p.incrementarMoveConta();
@@ -96,9 +95,29 @@ public class ChessMatch {
 			pecasNoTabuleiro.remove(capturarPeca);
 			capturadasPecas.add(capturarPeca);
 		}
+
+		// Movimento especial Roque pequendo, lado do rei
+		if (p instanceof Rei && target.getColuna() == source.getColuna() + 2) {
+			Posicao sourceT = new Posicao(source.getFileira(), source.getColuna() + 3);
+			Posicao targetT = new Posicao(source.getFileira(), source.getColuna() + 1);
+			PecaChess torre = (PecaChess) tabuleiro.removaPeca(sourceT);
+			tabuleiro.coloarPeca(torre, targetT);
+			torre.incrementarMoveConta();
+		}
+
+		// Movimento especial Roque grande, lado da rainha
+		if (p instanceof Rei && target.getColuna() == source.getColuna() - 2) {
+			Posicao sourceT = new Posicao(source.getFileira(), source.getColuna() - 4);
+			Posicao targetT = new Posicao(source.getFileira(), source.getColuna() - 1);
+			PecaChess torre = (PecaChess) tabuleiro.removaPeca(sourceT);
+			tabuleiro.coloarPeca(torre, targetT);
+			torre.incrementarMoveConta();
+		}
+
 		return capturarPeca;
+
 	}
-	
+
 	public void desfazerMove(Posicao origem, Posicao destino, Peca capturadaPeca) {
 		PecaChess p = (PecaChess) tabuleiro.removaPeca(destino);
 		p.decrementarMoveConta();
@@ -107,8 +126,27 @@ public class ChessMatch {
 			tabuleiro.coloarPeca(capturadaPeca, destino);
 			pecasNoTabuleiro.add(capturadaPeca);
 		}
+
+		// Movimento especial Roque pequendo, lado do rei
+		if (p instanceof Rei && destino.getColuna() == origem.getColuna() + 2) {
+			Posicao sourceT = new Posicao(origem.getFileira(), origem.getColuna() + 3);
+			Posicao targetT = new Posicao(origem.getFileira(), origem.getColuna() + 1);
+			PecaChess torre = (PecaChess) tabuleiro.removaPeca(targetT);
+			tabuleiro.coloarPeca(torre, sourceT);
+			torre.decrementarMoveConta();
+		}
+
+		// Movimento especial Roque grande, lado da rainha
+		if (p instanceof Rei && destino.getColuna() == origem.getColuna() - 2) {
+			Posicao sourceT = new Posicao(origem.getFileira(), origem.getColuna() - 4);
+			Posicao targetT = new Posicao(origem.getFileira(), origem.getColuna() - 1);
+			PecaChess torre = (PecaChess) tabuleiro.removaPeca(targetT);
+			tabuleiro.coloarPeca(torre, sourceT);
+			torre.decrementarMoveConta();
+		}
+
 	}
-	
+
 	private void validarSourcePosicao(Posicao posicao) {
 		if (!tabuleiro.haUmaPeca(posicao)) {
 			throw new ChessExcecao("Nao existe peca na posicao de origem!");
@@ -120,27 +158,28 @@ public class ChessMatch {
 			throw new ChessExcecao("Nao existe movimentacao da peca na posicao de origem!");
 		}
 	}
-	
+
 	private void validateTargetPosition(Posicao source, Posicao target) {
 		if (!tabuleiro.peca(source).possibleMoves(target)) {
 			throw new ChessExcecao("Não é possível mover a peça para essa posição!");
 		}
 	}
-		
+
 	private void nexTurn() {
 		turn++;
 		currentPlayer = (currentPlayer == Cor.BRANCA) ? Cor.PRETA : Cor.BRANCA;
 	}
-	
+
 	private Cor oponente(Cor cor) {
 		return (cor == Cor.BRANCA) ? Cor.PRETA : Cor.BRANCA;
 	}
-	
+
 	private PecaChess rei(Cor cor) {
-		List<Peca> lista = pecasNoTabuleiro.stream().filter(x -> ((PecaChess)x).getCor() == cor).collect(Collectors.toList());
-		for(Peca p : lista) {
+		List<Peca> lista = pecasNoTabuleiro.stream().filter(x -> ((PecaChess) x).getCor() == cor)
+				.collect(Collectors.toList());
+		for (Peca p : lista) {
 			if (p instanceof Rei) {
-				return (PecaChess)p;
+				return (PecaChess) p;
 			}
 		}
 		throw new IllegalStateException("Esta peca REI da cor " + cor + "nao esta no tabuleiro!");
@@ -148,8 +187,9 @@ public class ChessMatch {
 
 	private boolean testCheck(Cor cor) {
 		Posicao reiPosicao = rei(cor).getChessPosicao().toPosicao();
-		List<Peca> oponentePecas = pecasNoTabuleiro.stream().filter(x -> ((PecaChess)x).getCor() == oponente(cor)).collect(Collectors.toList());
-		for(Peca p : oponentePecas) {
+		List<Peca> oponentePecas = pecasNoTabuleiro.stream().filter(x -> ((PecaChess) x).getCor() == oponente(cor))
+				.collect(Collectors.toList());
+		for (Peca p : oponentePecas) {
 			boolean[][] mat = p.possibleMoves();
 			if (mat[reiPosicao.getFileira()][reiPosicao.getColuna()]) {
 				return true;
@@ -157,18 +197,19 @@ public class ChessMatch {
 		}
 		return false;
 	}
-	
+
 	public boolean testCheckMate(Cor cor) {
 		if (!testCheck(cor)) {
 			return false;
 		}
-		List<Peca> lista = pecasNoTabuleiro.stream().filter(x -> ((PecaChess)x).getCor() == cor).collect(Collectors.toList());
-		for(Peca p : lista) {
+		List<Peca> lista = pecasNoTabuleiro.stream().filter(x -> ((PecaChess) x).getCor() == cor)
+				.collect(Collectors.toList());
+		for (Peca p : lista) {
 			boolean[][] mat = p.possibleMoves();
-			for(int i=0; i<tabuleiro.getLinhas(); i++) {
-				for(int j=0; j<tabuleiro.getColunas(); j++) {
+			for (int i = 0; i < tabuleiro.getLinhas(); i++) {
+				for (int j = 0; j < tabuleiro.getColunas(); j++) {
 					if (mat[i][j]) {
-						Posicao inicial = ((PecaChess)p).getChessPosicao().toPosicao();
+						Posicao inicial = ((PecaChess) p).getChessPosicao().toPosicao();
 						Posicao destino = new Posicao(i, j);
 						Peca capturadaPeca = makeMove(inicial, destino);
 						boolean testCheck = testCheck(cor);
