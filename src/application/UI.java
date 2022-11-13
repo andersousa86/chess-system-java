@@ -109,7 +109,7 @@ public class UI {
 	private static void printCapturadaPecas(List<PecaChess> capturada) {
 		List<PecaChess> branca = capturada.stream().filter(x -> x.getCor() == Cor.BRANCA).collect(Collectors.toList());
 		List<PecaChess> preta = capturada.stream().filter(x -> x.getCor() == Cor.PRETA).collect(Collectors.toList());
-		System.out.print("Pecas capturadas.");
+		System.out.println("Pecas capturadas.");
 		System.out.print("Brancas: ");
 		System.out.println(ANSI_WHITE);
 		System.out.println(Arrays.toString(branca.toArray()));
