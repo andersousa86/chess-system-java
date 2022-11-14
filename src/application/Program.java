@@ -38,6 +38,13 @@ public class Program {
 				if (capturadaPeca != null) {
 					capturadas.add(capturadaPeca);
 				}
+				
+				if (chessMatch.getPromovida() != null) {
+					System.out.print("Informe a peca a ser promovida: (B/C/T/Q): ");
+					String tipo = sc.nextLine();
+					chessMatch.replacePromovidaPeca(tipo);
+				}
+				
 			}
 			catch(ChessExcecao e){
 				System.out.println(e.getMessage());

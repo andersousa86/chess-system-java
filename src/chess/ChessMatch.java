@@ -1,5 +1,6 @@
 package chess;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,6 +23,7 @@ public class ChessMatch {
 	private boolean check;
 	private boolean checkMate;
 	private PecaChess enPassantVulneravel;
+	private PecaChess promovida;
 
 	private List<Peca> pecasNoTabuleiro = new ArrayList<>();
 	private List<Peca> capturadasPecas = new ArrayList<>();
@@ -51,6 +53,10 @@ public class ChessMatch {
 
 	public PecaChess getEnPassantVulneravel() {
 		return enPassantVulneravel;
+	}
+
+	public PecaChess getPromovida() {
+		return promovida;
 	}
 
 	public PecaChess[][] getPecas() {
@@ -83,6 +89,16 @@ public class ChessMatch {
 
 		PecaChess moveuPeca = (PecaChess) tabuleiro.peca(target);
 
+		// Movimento especial promovida
+		promovida = null;
+		if (moveuPeca instanceof Peao) {
+			if ((moveuPeca.getCor() == Cor.BRANCA && target.getFileira() == 0)
+					|| (moveuPeca.getCor() == Cor.PRETA && target.getFileira() == 7)) {
+				promovida = (PecaChess) tabuleiro.peca(target);
+				promovida = replacePromovidaPeca("Q");
+			}
+		}
+
 		check = (testCheck(oponente(currentPlayer))) ? true : false;
 
 		if (testCheckMate(oponente(currentPlayer))) {
@@ -100,6 +116,37 @@ public class ChessMatch {
 		}
 
 		return (PecaChess) capturarPeca;
+	}
+
+	// Promover Peão
+	public PecaChess replacePromovidaPeca(String tipo) {
+		if (promovida == null) {
+			throw new IllegalStateException("Nao ha peca pra ser promovida!");
+		}
+		if (!tipo.equals("B") && !tipo.equals("C") && !tipo.equals("T") && !tipo.equals("Q")) {
+			throw new InvalidParameterException("Tipo invalido para promocao!");
+		}
+
+		Posicao pos = promovida.getChessPosicao().toPosicao();
+		Peca p = tabuleiro.removaPeca(pos);
+		pecasNoTabuleiro.remove(p);
+
+		PecaChess novaPeca = novaPeca(tipo, promovida.getCor());
+		tabuleiro.coloarPeca(novaPeca, pos);
+		pecasNoTabuleiro.add(novaPeca);
+
+		return novaPeca;
+
+	}
+
+	private PecaChess novaPeca(String tipo, Cor cor) {
+		if (tipo.equals("B"))
+			return new Bispo(tabuleiro, cor);
+		if (tipo.equals("C"))
+			return new Cavalo(tabuleiro, cor);
+		if (tipo.equals("Q"))
+			return new Rainha(tabuleiro, cor);
+		return new Torre(tabuleiro, cor);
 	}
 
 	private Peca makeMove(Posicao source, Posicao target) {
@@ -175,16 +222,15 @@ public class ChessMatch {
 			tabuleiro.coloarPeca(torre, sourceT);
 			torre.decrementarMoveConta();
 		}
-		
-		//Movimento especial en passant
+
+		// Movimento especial en passant
 		if (p instanceof Peao) {
 			if (origem.getColuna() != destino.getColuna() && capturadaPeca == enPassantVulneravel) {
-				PecaChess peao = (PecaChess)tabuleiro.removaPeca(destino);
+				PecaChess peao = (PecaChess) tabuleiro.removaPeca(destino);
 				Posicao peaoPosicao;
 				if (p.getCor() == Cor.BRANCA) {
 					peaoPosicao = new Posicao(3, destino.getColuna());
-				}
-				else {
+				} else {
 					peaoPosicao = new Posicao(4, destino.getColuna());
 				}
 				tabuleiro.coloarPeca(peao, peaoPosicao);
